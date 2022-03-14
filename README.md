@@ -1,7 +1,6 @@
 - 👋 Hi, I’m @WeltonVN
-- 👀 I’m interested in ... Working a lot
-- 🌱 I’m currently learning ... ???
-- 💞️ I’m looking to collaborate on ... VN
+- 👀 I’m interested in ... Nothing
+- 🌱 I’m currently ???
 
 <!---
 WeltonVN/WeltonVN is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
