@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  processa-imagens:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: processa_imagens_ionv:latest
+    restart: always
+    env_file: .env
+    privileged: true
+    command: >
+      sh -c '
+        if [ -z "$AD_USER" ] || [ -z "$AD_PASSWORD" ]; then
+          echo "Erro: AD_USER ou AD_PASSWORD não definidos";
+          exit 1;
+        fi &&
+        mkdir -p /mnt/imagensIonv &&
+        mount -t cifs "//192.168.250.13/C\$/ION Sistemas/IMAGENS/Imagens" /mnt/imagensIonv -o username=$AD_USER,password=$AD_PASSWORD,vers=3.0 &&
+        python3 app.py
+      '
+    # Remova o mapeamento de volumes se não precisa acessar do host!
+    #volumes:
+    #  - /mnt/imagensIonv:/mnt/imagensIonv
+    networks:
+      - imagens-network
+
+networks:
+  imagens-network:
+    driver: bridge

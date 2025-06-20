@@ -1,0 +1,19 @@
+# Imagem base Oracle com Instant Client
+FROM ghcr.io/oracle/oraclelinux8-instantclient:21
+
+# Cria e define o diretório de trabalho
+WORKDIR /app
+
+# Copia os arquivos necessários para o diretório de trabalho
+COPY . /app
+
+# Instalação do Python 3.9, cifs-utils e dependências
+RUN dnf -y install python39 python39-pip python39-setuptools python39-wheel cifs-utils && \
+    dnf clean all && \
+    pip3 install --no-cache-dir -r requirements.txt
+
+# Garante que o diretório de montagem existe
+RUN mkdir -p /mnt/imagensIonv
+
+# Executar o script principal
+CMD ["python3", "app.py"]

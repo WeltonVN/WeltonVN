@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+    stages {
+    
+        stage('Code') {
+            steps {
+                echo "Cloning the code"
+                git credentialsId: 'user-git',
+                branch: 'main',
+                url: 'https://github.com/Vila-Nova-Desenvolvimento/buscaImagesIonv.git'
+            }
+        }
+
+        stage('Build and Run Docker') {
+            steps {
+                script {
+           
+                    sh 'docker compose down'
+           
+                    // Execute o comando docker-compose up -d
+                    sh 'docker compose up -d --build'
+                    
+                    // Copia do .env para a raiz do projeto
+                      withCredentials([file(credentialsId: 'env-ionv', variable: 'ENV_FILE')]) {
+                        sh "docker compose cp '${ENV_FILE}' app:/var/www/.env" // Use single quotes here
+                    }
+                    
+                }
+            }
+        }
+        
+        stage('Install Composer Dependencies') {
+            steps {
+                script {
+                    // Enter the Docker container and execute composer install
+                    sh 'docker compose exec app composer install'
+                }
+            }
+        }
+ 
+    }
+}
